@@ -25,6 +25,7 @@ The `jsconfig.json` file is included in the template, allowing for **absolute im
     }
   }
 }
+```
 
 This means you can import files using these paths, for example:
 
