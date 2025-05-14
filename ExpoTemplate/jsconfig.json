@@ -7,6 +7,7 @@
       "@screens/*": ["src/screens/*"],
       "@hooks/*": ["src/hooks/*"],
       "@context/*": ["src/context/*"],
+      "@config/*": ["src/config/*"],
       "@data/*": ["data/*"],
       "@assets/*": ["assets/*"]
     }

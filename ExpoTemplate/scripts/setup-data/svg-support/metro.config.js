@@ -19,8 +19,7 @@ module.exports = (async () => {
     
     // Add the parent directory to watchFolders to monitor changes outside the app directory
     config.watchFolders = [
-      ...(config.watchFolders || []),  // Retain existing watch folders
-      path.resolve(__dirname, "../"),  // Add parent folder to watch
+      ...(config.watchFolders || [])  // Retain existing watch folders
   ];
 
     return config;
