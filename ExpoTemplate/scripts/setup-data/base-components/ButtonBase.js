@@ -6,10 +6,10 @@ import TextBase from "./TextBase";
   Base component for button components.
   Use this to change the global button styling.
 */
-const ButtonBase = ({ text, onPress, style, textStyle, ...props }) => {
+const ButtonBase = ({ style, children, ...props}) => {
   return (
-    <TouchableOpacity style={[styles.button, style]} onPress={onPress} {...props}>
-      <TextBase style={textStyle}>{text}</TextBase>
+    <TouchableOpacity style={[styles.button, style]} {...props}>
+      {children}
     </TouchableOpacity>
   );
 };
