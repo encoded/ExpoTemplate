@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import TextBase from "./TextBase";
 
-const TabSelector = ({ initialTab, tabs, onSelectionChanged, style, styleTab, styleTabText, styleSelectedTab, styleSelectedTabText }) => {
+const TabSelector = ({ initialTab, tabs, onSelectionChanged, style, styleTab, styleTabText, styleTabSelected, styleTabTextSelected }) => {
   const [selectedTab, setSelectedTab] = useState(initialTab || tabs?.[0]);
 
   useEffect(()=>{
@@ -24,10 +24,10 @@ const TabSelector = ({ initialTab, tabs, onSelectionChanged, style, styleTab, st
         return (
           <TouchableOpacity
             key={tab}
-            style={[styles.tab, styleTab, isSelected && [styles.selectedTab, styleSelectedTab]]}
+            style={[styles.tab, styleTab, isSelected && [styles.selectedTab, styleTabSelected]]}
             onPress={() => handleSelect(tab)}
           >
-            <TextBase style={[styles.tabText, styleTabText, isSelected && styleSelectedTabText]}>
+            <TextBase style={[styles.tabText, styleTabText, isSelected && styleTabTextSelected]}>
               {tab}
             </TextBase>
           </TouchableOpacity>

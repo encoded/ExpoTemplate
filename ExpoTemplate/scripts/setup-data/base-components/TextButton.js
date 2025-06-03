@@ -5,7 +5,7 @@ import TextBase from "./TextBase";
 /*
   Base component for text button components.
 */
-const TextButton = ({ text, onPress, style, textStyle, ...props }) => {
+const TextButton = ({ text, textStyle, ...props }) => {
   return (
     <TouchableOpacity {...props}>
       <TextBase style={textStyle}>{text}</TextBase>
