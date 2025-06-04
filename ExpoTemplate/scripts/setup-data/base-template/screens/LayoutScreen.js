@@ -23,7 +23,7 @@ export default function LayoutScreen({ children, style }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: SPACING.paddingHorizontal

@@ -8,7 +8,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "postinstall": "node ./scripts/project-setup.js"
+    "setup": "node ./scripts/project-setup.js"
   },
   "dependencies": {
     "@expo/metro-runtime": "~5.0.4",

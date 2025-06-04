@@ -1,6 +1,5 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
-import TextBase from "./TextBase";
 
 /*
   Base component for button components.

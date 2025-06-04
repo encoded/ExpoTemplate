@@ -28,26 +28,43 @@ const copyDirectory = (sourceDir, destDir) => {
   });
 };
 
-// Copy base-components
-const installBaseComponents = () => {
-  console.log('Copying base components...');
-  const sourceBaseComponentsDir = path.join(setupDir, 'base-components');
-  const destBaseComponentsDir = path.join(process.cwd(), 'src/components/base');
+// Install base-template
+const installBaseTemplate = () => {
+  console.log('Copying base template...');
+  const foldersToCopy = ['config', 'screens', 'base'];
 
-  if (!fs.existsSync(destBaseComponentsDir)) {
-    fs.mkdirSync(destBaseComponentsDir, { recursive: true });
-  }
+  foldersToCopy.forEach(folder => {
+    const source = path.join(setupDir, 'base-template', folder);
+    const dest = path.join(process.cwd(), 'src', folder);
 
-  copyDirectory(sourceBaseComponentsDir, destBaseComponentsDir);
-  console.log('Base components copied successfully.');
+    if (!fs.existsSync(dest)) {
+      fs.mkdirSync(dest, { recursive: true });
+    }
+
+    copyDirectory(source, dest);
+  });
+
+  console.log('Base template copied successfully.');
 };
 
-// Copy game-template folders
+const installBaseTemplateDependencies = () => {
+  console.log('Installing base template dependencies...');
+  try {
+    execSync(
+      'npx expo install react-native-safe-area-context',
+      { stdio: 'inherit' }
+    );
+    console.log('Base template dependencies installed successfully.');
+  } catch (error) {
+    console.error('❌ Failed to install base template dependencies. Please install manually.');
+  }
+};
+
+// Game template
 const installGameTemplate = () => {
   console.log('Copying game template...');
-
-  // Copy folders to src/
   const foldersToCopy = ['config', 'navigation', 'screens'];
+
   foldersToCopy.forEach(folder => {
     const source = path.join(setupDir, 'game-template', folder);
     const dest = path.join(process.cwd(), 'src', folder);
@@ -59,7 +76,6 @@ const installGameTemplate = () => {
     copyDirectory(source, dest);
   });
 
-  // Replace root App.js
   const sourceAppJs = path.join(setupDir, 'game-template', 'App.js');
   const destAppJs = path.join(process.cwd(), 'App.js');
   copyFile(sourceAppJs, destAppJs);
@@ -67,26 +83,52 @@ const installGameTemplate = () => {
   console.log('Game template copied successfully.');
 };
 
-// Install navigation dependencies
 const installGameTemplateDependencies = () => {
   console.log('Installing game template dependencies...');
-
   try {
-    // Use expo install to match SDK-compatible versions
     execSync(
-      'npx expo install ' + // <-- NOTE SPACE AFTER 'install'
-      '@react-navigation/native ' +
-      '@react-navigation/stack ' +
-      'react-native-screens ' +
-      'react-native-safe-area-context ' +
-      'react-native-gesture-handler ' +
-      'react-native-reanimated',
+      'npx expo install @react-navigation/native @react-navigation/stack',
       { stdio: 'inherit' }
     );
-
     console.log('Game template dependencies installed successfully.');
   } catch (error) {
     console.error('❌ Failed to install game template dependencies. Please install manually.');
+  }
+};
+
+// App template
+const installAppTemplate = () => {
+  console.log('Copying app template...');
+  const foldersToCopy = ['navigation', 'screens', 'config'];
+
+  foldersToCopy.forEach(folder => {
+    const source = path.join(setupDir, 'app-template', folder);
+    const dest = path.join(process.cwd(), 'src', folder);
+
+    if (!fs.existsSync(dest)) {
+      fs.mkdirSync(dest, { recursive: true });
+    }
+
+    copyDirectory(source, dest);
+  });
+
+  const sourceAppJs = path.join(setupDir, 'app-template', 'App.js');
+  const destAppJs = path.join(process.cwd(), 'App.js');
+  copyFile(sourceAppJs, destAppJs);
+
+  console.log('App template copied successfully.');
+};
+
+const installAppTemplateDependencies = () => {
+  console.log('Installing app template dependencies...');
+  try {
+    execSync(
+      'npx expo install @react-navigation/native @react-navigation/stack @react-navigation/bottom-tabs',
+      { stdio: 'inherit' }
+    );
+    console.log('App template dependencies installed successfully.');
+  } catch (error) {
+    console.error('❌ Failed to install app template dependencies. Please install manually.');
   }
 };
 
@@ -100,16 +142,11 @@ async function promptSetup() {
       default: true,
     },
     {
-      type: 'confirm',
-      name: 'useBaseComponents',
-      message: 'Would you like to use base components (e.g., TextBase, ButtonBase)?',
-      default: true,
-    },
-    {
-      type: 'confirm',
-      name: 'useGameTemplate',
-      message: 'Would you like to use the game template (requires base components)?',
-      default: false,
+      type: 'list',
+      name: 'templateChoice',
+      message: 'Which template would you like to use?',
+      choices: ['game', 'app', 'none'],
+      default: 'none',
     },
   ]);
 
@@ -126,42 +163,22 @@ async function promptSetup() {
     console.log('SVG support skipped.');
   }
 
-  let baseInstalled = answers.useBaseComponents;
+  if (answers.templateChoice !== 'none') {
+    installBaseTemplate();
+    installBaseTemplateDependencies();
 
-  // Install base-components if selected
-  if (baseInstalled) {
-    installBaseComponents();
-  }
-
-  // Handle game template
-  if (answers.useGameTemplate) {
-    // If base-components weren't selected, ask to install them now
-    if (!baseInstalled) {
-      const confirmInstallBase = await inquirer.prompt([
-        {
-          type: 'confirm',
-          name: 'installBaseNow',
-          message: 'Game template depends on base components. Install base components now?',
-          default: true,
-        },
-      ]);
-
-      if (confirmInstallBase.installBaseNow) {
-        installBaseComponents();
-        baseInstalled = true;
-      } else {
-        console.log('Cannot install game template without base components. Skipping game template.');
-        return;
-      }
+    if (answers.templateChoice === 'game') {
+      installGameTemplate();
+      installGameTemplateDependencies();
+    } else if (answers.templateChoice === 'app') {
+      installAppTemplate();
+      installAppTemplateDependencies();
     }
-
-    installGameTemplate();
-    installGameTemplateDependencies();
   } else {
-    console.log('Game template setup skipped.');
+    console.log('No template selected.');
   }
 
-  console.log('Setup complete!');
+  console.log('✅ Setup complete!');
 }
 
 promptSetup().catch(console.error);
