@@ -87,7 +87,7 @@ const installGameTemplateDependencies = () => {
   console.log('Installing game template dependencies...');
   try {
     execSync(
-      'npx expo install @react-navigation/native @react-navigation/stack',
+      'npx expo install @react-navigation/native @react-navigation/stack react-native-gesture-handler react-native-screens',
       { stdio: 'inherit' }
     );
     console.log('Game template dependencies installed successfully.');
@@ -123,7 +123,7 @@ const installAppTemplateDependencies = () => {
   console.log('Installing app template dependencies...');
   try {
     execSync(
-      'npx expo install @react-navigation/native @react-navigation/stack @react-navigation/bottom-tabs',
+      'npx expo install @react-navigation/native @react-navigation/stack @react-navigation/bottom-tabs react-native-gesture-handler react-native-screens',
       { stdio: 'inherit' }
     );
     console.log('App template dependencies installed successfully.');
